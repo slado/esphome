@@ -1,0 +1,56 @@
+esphome:
+  name: a2
+
+esp32:
+  board: lolin_s2_mini
+  variant: esp32s2
+  framework:
+    type: arduino
+#    version: 2.0.3
+    platform_version: 4.4.0
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "A2 Fallback Hotspot"
+    password: !secret fallback_password
+    ap_timeout: 10min
+
+#captive_portal:
+
+i2c:
+  sda: 13
+  scl: 16
+  scan: true
+  id: bus_a
+
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    update_interval: 60s
+
+  - platform: tof10120
+    name: "TOF10120 Distance"
+    update_interval: 1s
+
+light:
+  - platform: status_led
+    name: "Switch state"
+    pin: GPIO15
