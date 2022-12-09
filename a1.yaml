@@ -1,12 +1,18 @@
 esphome:
   name: a1
 
+#esp32:
+#  board: esp32-s2-saola-1
+#  framework:
+#    type: esp-idf
+
 esp32:
-  board: esp32-s2-saola-1
-#  board: esp32dev
-#  variant: esp32s2
+  board: lolin_s2_mini
+  variant: esp32s2
   framework:
     type: esp-idf
+    platform_version: 4.4.0
+
 
 # Enable logging
 logger:

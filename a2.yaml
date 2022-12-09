@@ -1,11 +1,17 @@
 esphome:
   name: a2
 
+#esp32:
+#  board: esp32-s2-saola-1
+#  framework:
+#    type: esp-idf
+
+
 esp32:
   board: lolin_s2_mini
   variant: esp32s2
   framework:
-    type: arduino
+    type: esp-idf
 #    version: 2.0.3
     platform_version: 4.4.0
 
@@ -33,8 +39,8 @@ wifi:
 #captive_portal:
 
 i2c:
-  sda: 13
-  scl: 16
+  sda: 37
+  scl: 39
   scan: true
   id: bus_a
 
@@ -46,11 +52,26 @@ sensor:
     name: "WiFi Signal Sensor"
     update_interval: 60s
 
-  - platform: tof10120
-    name: "TOF10120 Distance"
-    update_interval: 1s
+#  - platform: tof10120
+#    name: "TOF10120 Distance"
+#    update_interval: 1s
 
 light:
   - platform: status_led
     name: "Switch state"
     pin: GPIO15
+
+font:
+  - file: "gfonts://Roboto"
+    id: roboto
+    size: 20
+
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 64x48"
+#    reset_pin: D0
+    address: 0x3C
+    lambda: |-
+      it.print(0, 0, id(roboto), "Hello World!!");
+
