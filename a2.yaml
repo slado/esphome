@@ -12,7 +12,6 @@ esp32:
   variant: esp32s2
   framework:
     type: esp-idf
-#    version: 2.0.3
     platform_version: 4.4.0
 
 # Enable logging
@@ -39,22 +38,22 @@ wifi:
 #captive_portal:
 
 i2c:
-  sda: 37
-  scl: 39
+  sda: GPIO33
+  scl: GPIO35
   scan: true
   id: bus_a
+  frequency: 100kHz
 
 sensor:
   - platform: uptime
     name: Uptime Sensor
 
-  - platform: wifi_signal
-    name: "WiFi Signal Sensor"
-    update_interval: 60s
-
-#  - platform: tof10120
-#    name: "TOF10120 Distance"
-#    update_interval: 1s
+#  - platform: vl53l0x
+#    name: "Distance"
+#    address: 0x29
+#    update_interval: 1500ms
+#    long_range: true
+#    enable_pin: GPIO9
 
 light:
   - platform: status_led
@@ -70,7 +69,7 @@ font:
 display:
   - platform: ssd1306_i2c
     model: "SSD1306 64x48"
-#    reset_pin: D0
+    reset_pin: GPIO9
     address: 0x3C
     lambda: |-
       it.print(0, 0, id(roboto), "Hello World!!");
