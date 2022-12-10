@@ -1,10 +1,11 @@
 esphome:
-  name: a1
+  name: a3
 
 #esp32:
 #  board: esp32-s2-saola-1
 #  framework:
 #    type: esp-idf
+
 
 esp32:
   board: lolin_s2_mini
@@ -12,7 +13,6 @@ esp32:
   framework:
     type: esp-idf
     platform_version: 4.4.0
-
 
 # Enable logging
 logger:
@@ -31,17 +31,9 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "A1 Fallback Hotspot"
+    ssid: "A3 Fallback Hotspot"
     password: !secret fallback_password
     ap_timeout: 10min
-
-mdns:
-  disabled: false
-
-time:
-  - platform: homeassistant
-    id: ha_time
-
 
 #captive_portal:
 
@@ -55,44 +47,30 @@ i2c:
 sensor:
   - platform: uptime
     name: Uptime Sensor
+    id: s_uptime
+
 
   - platform: wifi_signal
     name: "WiFi Signal Sensor"
-    update_interval: 60s
     id: s_wifi_signal
+    update_interval: 2s
+
 
   - platform: vl53l0x
     name: "Distance"
     address: 0x29
     update_interval: 1500ms
     long_range: true
-
+#    enable_pin: GPIO9
 
 light:
   - platform: status_led
     name: "Switch state"
     pin: GPIO15
 
-button:
-  - platform: restart
-    name: "Restart"
-
-text_sensor:
-  - platform: wifi_info
-    ip_address:
-      name: IP Address
-    ssid:
-      name: Connected SSID
-    bssid:
-      name: Connected BSSID
-    mac_address:
-      name: Mac Wifi Address
-    scan_results:
-      name: Latest Scan Results
-  - platform: version
-    name: "ESPHome Version"
-
-
+time:
+  - platform: homeassistant
+    id: ha_time
 
 
 font:
