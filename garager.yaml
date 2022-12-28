@@ -1,5 +1,5 @@
 esphome:
-  name: a1
+  name: garager
 
 #esp32:
 #  board: esp32-s2-saola-1
@@ -31,7 +31,7 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "A1 Fallback Hotspot"
+    ssid: "Garager Fallback Hotspot"
     password: !secret fallback_password
     ap_timeout: 10min
 
