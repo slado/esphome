@@ -1,0 +1,110 @@
+esphome:
+  name: a4
+
+#esp32:
+#  board: esp32-s2-saola-1
+#  framework:
+#    type: esp-idf
+
+
+esp32:
+  board: lolin_s2_mini
+  variant: esp32s2
+  framework:
+    type: esp-idf
+    platform_version: 4.4.0
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "A4 Fallback Hotspot"
+    password: !secret fallback_password
+    ap_timeout: 10min
+
+#captive_portal:
+
+i2c:
+  sda: GPIO33
+  scl: GPIO35
+  scan: true
+  id: bus_a
+  frequency: 100kHz
+
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+    id: s_uptime
+
+
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    id: s_wifi_signal
+    update_interval: 2s
+
+#  - platform: vl53l0x
+#    name: "Distance"
+#    address: 0x29
+#    update_interval: 1500ms
+#    long_range: true
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+      id: s_wifi_ip
+
+
+light:
+  - platform: status_led
+    name: "Switch state"
+    pin: GPIO15
+
+time:
+  - platform: homeassistant
+    id: ha_time
+
+
+font:
+  - file: "gfonts://Roboto"
+    id: roboto8
+    size: 8
+
+  - file: "gfonts://Roboto"
+    id: roboto9
+    size: 9
+
+  - file: "gfonts://Roboto"
+    id: roboto10
+    size: 10
+
+  - file: "gfonts://Roboto"
+    id: roboto14
+    size: 14
+
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 64x48"
+    reset_pin: GPIO9
+    address: 0x3C
+    update_interval: 500ms
+    lambda: |-
+      it.strftime(0, 0, id(roboto10), "%d.%m.%Y", id(ha_time).now());
+      it.strftime(0, 12, id(roboto10), "%H.%M.%S", id(ha_time).now());
+      it.printf(it.get_width(), 23, id(roboto14), TextAlign::RIGHT, "%.0fdb", id(s_wifi_signal).state);
+      it.printf(0, 36, id(roboto8), "%s", id(s_wifi_ip).state.c_str());
+
