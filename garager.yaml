@@ -11,7 +11,7 @@ esp32:
   variant: esp32s2
   framework:
     type: esp-idf
-    platform_version: 4.4.0
+    platform_version: 5.2.0
 
 
 # Enable logging
@@ -50,7 +50,7 @@ i2c:
   scl: GPIO35
   scan: true
   id: bus_a
-  frequency: 100kHz
+#  frequency: 100kHz
 
 sensor:
   - platform: uptime
@@ -65,23 +65,25 @@ sensor:
     name: "Distance door"
     id: s_distance_door
     address: 0x41
-    update_interval: 1500ms
+    update_interval: 500ms
     long_range: true
     enable_pin: GPIO39
+    timeout: 200us
 
   - platform: vl53l0x
     name: "Distance car"
     id: s_distance_car
     address: 0x42
-    update_interval: 1500ms
+    update_interval: 500ms
     long_range: true
     enable_pin: GPIO37
+    timeout: 200us
 
 
-light:
-  - platform: status_led
-    name: "Switch state"
-    pin: GPIO15
+#light:
+#  - platform: status_led
+#    name: "Switch state"
+#    pin: GPIO15
 
 button:
   - platform: restart
@@ -124,7 +126,7 @@ binary_sensor:
     # the sensor will consider the garage to be occupied if the distance
     # measured by the time-of-flight sensor is less than 2 meters
     lambda: |-
-      if (id(s_distance_door).state < 2.0) {
+      if (id(s_distance_door).state < 0.5) {
         return true;
       }
       return false;
