@@ -69,6 +69,7 @@ sensor:
     long_range: true
     enable_pin: GPIO39
     timeout: 200us
+    internal: true
 
   - platform: vl53l0x
     name: "Distance car"
@@ -78,6 +79,7 @@ sensor:
     long_range: true
     enable_pin: GPIO37
     timeout: 200us
+    internal: true
 
 
 #light:
