@@ -38,9 +38,9 @@ wifi:
 mdns:
   disabled: false
 
-time:
-  - platform: homeassistant
-    id: ha_time
+#time:
+#  - platform: homeassistant
+#    id: ha_time
 
 
 #captive_portal:
