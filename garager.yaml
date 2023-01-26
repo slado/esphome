@@ -82,10 +82,11 @@ sensor:
     internal: true
 
 
-#light:
-#  - platform: status_led
-#    name: "Switch state"
-#    pin: GPIO15
+light:
+  - platform: status_led
+    name: "Status light"
+    id: status_light
+    pin: GPIO15
 
 button:
   - platform: restart
@@ -117,8 +118,10 @@ binary_sensor:
     # measured by the time-of-flight sensor is less than 2 meters
     lambda: |-
       if (id(s_distance_car).state < 2.0) {
+        id(status_light).turn_on();
         return true;
       }
+      id(status_light).turn_off();
       return false;
 
   - platform: template
