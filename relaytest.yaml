@@ -1,0 +1,100 @@
+esphome:
+  name: relaytest
+
+#esp32:
+#  board: esp32-s2-saola-1
+#  framework:
+#    type: esp-idf
+
+esp32:
+  board: lolin_s2_mini
+  variant: esp32s2
+#  framework:
+#    type: esp-idf
+#    platform_version: 5.2.0
+
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Garager Fallback Hotspot"
+    password: !secret fallback_password
+    ap_timeout: 10min
+
+mdns:
+  disabled: false
+
+#time:
+#  - platform: homeassistant
+#    id: ha_time
+
+
+#captive_portal:
+
+i2c:
+  sda: GPIO33
+  scl: GPIO35
+  scan: true
+  id: bus_a
+#  frequency: 100kHz
+
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    update_interval: 60s
+    id: s_wifi_signal
+
+
+
+
+light:
+  - platform: status_led
+    name: "Status light"
+    id: status_light
+    pin: GPIO15
+
+button:
+  - platform: restart
+    name: "Restart"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+    ssid:
+      name: Connected SSID
+    bssid:
+      name: Connected BSSID
+    mac_address:
+      name: Mac Wifi Address
+    scan_results:
+      name: Latest Scan Results
+  - platform: version
+    name: "ESPHome Version"
+
+switch:
+  - platform: gpio
+    pin: GPIO3
+    id: relay
+    name: "Garage Remote"
+    icon: "mdi:gate"
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay

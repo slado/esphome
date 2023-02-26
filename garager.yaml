@@ -141,6 +141,7 @@ binary_sensor:
 
   - platform: template
     name: "Garage open"
+    id: garage_open
     # Set the distance threshold for determining occupancy
     # For example, if the distance threshold is set to 2 meters,
     # the sensor will consider the garage to be occupied if the distance
@@ -151,25 +152,31 @@ binary_sensor:
       }
       return false;
 
+switch:
+  - platform: gpio
+    pin: GPIO3
+    id: openrelay
+    name: "Garage Remote"
+    icon: "mdi:gate"
+    on_turn_on:
+    - delay: 1000ms
+    - switch.turn_off: openrelay
+    internal: true
 
-#font:
-#  - file: "gfonts://Roboto"
-#    id: roboto10
-#    size: 10
-#
-#  - file: "gfonts://Roboto"
-#    id: roboto14
-#    size: 14
-
-
-#display:
-#  - platform: ssd1306_i2c
-#    model: "SSD1306 64x48"
-#    reset_pin: GPIO9
-#    address: 0x3C
-#    update_interval: 500ms
-#    lambda: |-
-#      it.strftime(0, 0, id(roboto10), "%d.%m.%Y", id(ha_time).now());
-#      it.strftime(0, 12, id(roboto10), "%H.%M.%S", id(ha_time).now());
-#      it.printf(it.get_width(), 23, id(roboto14), TextAlign::RIGHT, "%.0fdb", id(s_wifi_signal).state);
-
+cover:
+  - platform: template
+    #id: garage_door:
+    device_class: garage
+    name: "Right garage"
+    lambda: |-
+       if (id(garage_open).state) {
+         return COVER_OPEN;
+       } else {
+         return COVER_CLOSED;
+       }
+    open_action:
+     - switch.turn_on: openrelay
+    close_action:
+     - switch.turn_on: openrelay
+    stop_action:
+     - switch.turn_on: openrelay
