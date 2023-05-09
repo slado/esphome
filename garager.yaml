@@ -28,6 +28,7 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
+  power_save_mode: none
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -95,7 +96,8 @@ sensor:
           window_size: 10
       #- min:
 
-
+  - platform: internal_temperature
+    name: "Internal Temperature"
 
 light:
   - platform: status_led
@@ -159,9 +161,9 @@ switch:
     name: "Garage Remote"
     icon: "mdi:gate"
     on_turn_on:
-    - delay: 1000ms
+    - delay: 500ms
     - switch.turn_off: openrelay
-    internal: true
+    internal: false
 
 cover:
   - platform: template
