@@ -41,6 +41,14 @@ mdns:
 
 #captive_portal:
 
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+  frequency: 100kHz
+
+
 
 sensor:
   - platform: uptime
@@ -68,10 +76,9 @@ text_sensor:
       name: MAC Address
       id: s_wifi_mac
 
-light:
-  - platform: status_led
-    name: "Switch state"
-    pin: GPIO15
+#light:
+#  - platform: status_led
+#    name: "Switch state"
 
 time:
   - platform: homeassistant
