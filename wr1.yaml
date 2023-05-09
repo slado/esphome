@@ -1,0 +1,80 @@
+esphome:
+  name: wr1
+
+#esp32:
+#  board: esp32-s2-saola-1
+#  framework:
+#    type: esp-idf
+
+
+esp32:
+  board: nodemcu-32s
+#  variant: esp32s2
+#  framework:
+#    type: esp-idf
+#    platform_version: 5.2.0
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  domain: .datapac.local
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "A4 Fallback Hotspot"
+    password: !secret fallback_password
+    ap_timeout: 10min
+
+mdns:
+  disabled: false
+
+#captive_portal:
+
+
+sensor:
+  - platform: uptime
+    name: Uptime Sensor
+    id: s_uptime
+
+
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    id: s_wifi_signal
+    update_interval: 2s
+
+#  - platform: vl53l0x
+#    name: "Distance"
+#    address: 0x29
+#    update_interval: 1500ms
+#    long_range: true
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+      id: s_wifi_ip
+    mac_address:
+      name: MAC Address
+      id: s_wifi_mac
+
+light:
+  - platform: status_led
+    name: "Switch state"
+    pin: GPIO15
+
+time:
+  - platform: homeassistant
+    id: ha_time
+
+
