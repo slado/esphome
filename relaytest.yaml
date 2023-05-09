@@ -1,18 +1,18 @@
 esphome:
-  name: a2
+  name: relaytest
 
 #esp32:
 #  board: esp32-s2-saola-1
 #  framework:
 #    type: esp-idf
 
-
 esp32:
   board: lolin_s2_mini
   variant: esp32s2
-  framework:
-    # type: esp-idf
-    platform_version: 5.2.0
+#  framework:
+#    type: esp-idf
+#    platform_version: 5.2.0
+
 
 # Enable logging
 logger:
@@ -31,9 +31,17 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "A2 Fallback Hotspot"
+    ssid: "Garager Fallback Hotspot"
     password: !secret fallback_password
     ap_timeout: 10min
+
+mdns:
+  disabled: false
+
+#time:
+#  - platform: homeassistant
+#    id: ha_time
+
 
 #captive_portal:
 
@@ -42,36 +50,25 @@ i2c:
   scl: GPIO35
   scan: true
   id: bus_a
-  frequency: 100kHz
+#  frequency: 100kHz
 
 sensor:
   - platform: uptime
     name: Uptime Sensor
-    id: s_uptime
-
 
   - platform: wifi_signal
     name: "WiFi Signal Sensor"
+    update_interval: 60s
     id: s_wifi_signal
-    update_interval: 2s
 
 
-  - platform: vl53l0x
-    name: "Distance"
-    address: 0x29
-    update_interval: 1500ms
-    long_range: true
-#    enable_pin: GPIO9
+
 
 light:
   - platform: status_led
-    name: "Switch state"
+    name: "Status light"
+    id: status_light
     pin: GPIO15
-
-time:
-  - platform: homeassistant
-    id: ha_time
-
 
 button:
   - platform: restart
@@ -92,25 +89,12 @@ text_sensor:
   - platform: version
     name: "ESPHome Version"
 
-
-font:
-  - file: "gfonts://Roboto"
-    id: roboto10
-    size: 10
-
-  - file: "gfonts://Roboto"
-    id: roboto14
-    size: 14
-
-
-display:
-  - platform: ssd1306_i2c
-    model: "SSD1306 64x48"
-    reset_pin: GPIO9
-    address: 0x3C
-    update_interval: 500ms
-    lambda: |-
-      it.strftime(0, 0, id(roboto10), "%d.%m.%Y", id(ha_time).now());
-      it.strftime(0, 12, id(roboto10), "%H.%M.%S", id(ha_time).now());
-      it.printf(it.get_width(), 23, id(roboto14), TextAlign::RIGHT, "%.0fdb", id(s_wifi_signal).state);
-
+switch:
+  - platform: gpio
+    pin: GPIO3
+    id: relay
+    name: "Garage Remote"
+    icon: "mdi:gate"
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: relay
